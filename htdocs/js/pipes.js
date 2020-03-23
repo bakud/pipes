@@ -1,7 +1,7 @@
 
 
 // start pipes.
-var default_value = "Anonymouse@pipes$ ";
+var default_value = "anon@pipes$ ";
 var q;
 var drawing;
 var all;
