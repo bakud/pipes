@@ -1,16 +1,36 @@
+
+
 // start pipes.
 var default_value = "Anonymouse@pipes$ ";
 var q;
 var drawing;
 var all;
+var title;
+var default_font_size = "1.5vh";
+var title_ascii_art = (function() {/*
+  ______   __     ______   ______     ______
+ /\  == \ /\ \   /\  == \ /\  ___\   /\  ___\
+ \ \  _-/ \ \ \  \ \  _-/ \ \  __\   \ \___  \
+  \ \_\    \ \_\  \ \_\    \ \_____\  \/\_____\
+   \/_/     \/_/   \/_/     \/_____/   \/_____/
+
+                                  version 0.9.0
+*/}).toString().match(/\/\*([^]*)\*\//)[1];
 
 function Init(){
 
     init_all();
     init_drawing_area();
+    init_title();
     init_input_area();
     set_theme();
 
+};
+
+var init_title = function (){
+    //title = document.createElement('div');
+    //all.appendChild(title);
+    drawing.innerText += title_ascii_art;
 };
 
 var set_theme = function (){
@@ -32,7 +52,7 @@ var  init_all = function (){
     all.style.overflowY  = "scroll";
     all.style.fontFamily = "Courier New, Courier, monospace";
     all.style.whiteSpace = "pre";
-    all.style.fontSize   = "14px";
+    all.style.fontSize   = default_font_size;
 };
 
 var init_drawing_area = function(){
@@ -47,9 +67,9 @@ var init_input_area  =  function(){
     q.style.borderWidth  = "0px";
     q.style.bottom       = "5px";
     q.style.width        = "98%";
-    q.style.fontSize     = "14px";
     q.style.fontFamily   = "Courier New, Courier, monospace";
     q.style.whiteSpace   = "pre";
+    q.style.fontSize     = default_font_size;
     q.style.outlineWidth = "0px";
     q.style.outline      = "none";
     q.value = default_value;
@@ -85,10 +105,10 @@ var pressed_enter = function (q){
     var text = get_input_text();
     if (text != "" && !execute_cmd()) {
         console.log("hit out");
-        text = get_cmd() + ": command not found\r\n";
-    } else {
-        text += "\r\n";
+        text = "-pash: " + get_cmd() + ": command not found";
     }
+
+    text += "\r\n";
 
     drawing.innerText += text;
     q.value = default_value;
