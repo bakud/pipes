@@ -1,3 +1,3 @@
-var Pash = function(q){
-    
-};
+export default class pash {
+
+}
