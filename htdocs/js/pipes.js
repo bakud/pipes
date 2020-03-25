@@ -1,4 +1,4 @@
-import pash from './pash.js';
+import pash from './libs/pash.js';
 
 // start pipes.
 var default_value = "anon@pipes$ ";
