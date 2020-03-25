@@ -1,0 +1,3 @@
+var Pash = function(q){
+    
+};

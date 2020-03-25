@@ -1,4 +1,4 @@
-
+import pash from './pash.js';
 
 // start pipes.
 var default_value = "anon@pipes$ ";
@@ -28,8 +28,6 @@ function Init(){
 };
 
 var init_title = function (){
-    //title = document.createElement('div');
-    //all.appendChild(title);
     drawing.innerText += title_ascii_art;
 };
 
