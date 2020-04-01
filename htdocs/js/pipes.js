@@ -2,6 +2,7 @@ import pash from './libs/pash.js';
 
 // start pipes.
 var default_value = "anon@pipes$ ";
+var psh = new pash(default_value, this);
 var q;
 var drawing;
 var all;
@@ -100,15 +101,9 @@ var init_input_area  =  function(){
 };
 
 var pressed_enter = function (q){
-    var text = get_input_text();
-    if (text != "" && !execute_cmd()) {
-        console.log("hit out");
-        text = "-pash: " + get_cmd() + ": command not found";
-    }
 
-    text += "\r\n";
+    std_out(psh.pash_proc(q.value) + "\r\n");
 
-    drawing.innerText += text;
     q.value = default_value;
     q.focus();
     var element = document.documentElement;
@@ -117,25 +112,8 @@ var pressed_enter = function (q){
 
 };
 
-var get_input_text = function(){
-    return q.value.replace(default_value, "");
-}
-
-var get_cmd = function(){
-    const text          = get_input_text();
-    const string_array  = text.split(" ");
-    return string_array[0];
-};
-
-var execute_cmd = function (){
-    // check for could execute
-    if (!is_bin(get_cmd())){
-        return undefined;
-    }
-};
-
-var is_bin = function (cmd){
-    return undefined;
+var std_out = function(output){
+    drawing.innerText += output;
 };
 
 var set_text = function (text,q) {
@@ -160,5 +138,6 @@ var post_keydown = function (event, q) {
         return false;
       }
     }
-
 }
+
+Init();
