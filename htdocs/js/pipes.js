@@ -1,8 +1,9 @@
-import pash from './libs/pash.js';
+import pipes_shell from './libs/psh.js';
 
 // start pipes.
+var fns;
 var default_value = "anon@pipes$ ";
-var psh = new pash(default_value, this);
+var psh = new pipes_shell();
 var q;
 var drawing;
 var all;
@@ -18,17 +19,22 @@ var title_ascii_art = (function() {/*
                                   version 0.9.0
 */}).toString().match(/\/\*([^]*)\*\//)[1];
 
-function Init(){
+function Init() {
 
     init_all();
     init_drawing_area();
     init_title();
     init_input_area();
     set_theme();
+    psh.set_pipes_obj({
+      default_value,
+      std_out,
+      drawing
+    });
 
 };
 
-var init_title = function (){
+var init_title = function () {
     drawing.innerText += title_ascii_art;
 };
 
@@ -45,7 +51,7 @@ var set_theme = function (){
     q.style.color = text_color;
 };
 
-var  init_all = function (){
+var init_all = function (){
     all = document.createElement('div');
     document.body.appendChild(all);
     all.style.overflowY  = "scroll";
@@ -79,7 +85,7 @@ var init_input_area  =  function(){
     }, {passive: false});
     q.addEventListener("paste", function(event){
       if ( q.selectionStart >= 0 || q.selectionEnd >= 0 ){
-          set_text(event.target.value, q);
+          fns.set_text(event.target.value, q);
           return;
       }
     });
@@ -102,7 +108,7 @@ var init_input_area  =  function(){
 
 var pressed_enter = function (q){
 
-    std_out(psh.pash_proc(q.value) + "\r\n");
+    psh.psh_proc(q.value);
 
     q.value = default_value;
     q.focus();
