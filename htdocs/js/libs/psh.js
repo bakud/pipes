@@ -1,6 +1,7 @@
 // bin
 import clear from '../bin/clear.js';
 import grep from '../bin/grep.js';
+import cat from '../bin/cat.js';
 
 export default class pipes_shell {
 
@@ -41,6 +42,12 @@ export default class pipes_shell {
     return string_array[0];
   };
 
+  get_args(cmd){
+    var cmd_array  = cmd.split(" ");
+    cmd_array.shift();
+    return cmd_array;
+  }
+
   execute_cmd(input_text) {
     // check for could execute
     if (!this.is_bin(this.get_cmd(input_text))){
@@ -50,6 +57,7 @@ export default class pipes_shell {
     var bin;
     var name = this.get_cmd(input_text);
     eval("bin = new " + name + "(this.pipes);");
+    console.log(this.get_args(input_text));
     bin.main();
     bin = null;
 
