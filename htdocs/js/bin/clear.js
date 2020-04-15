@@ -6,6 +6,7 @@ export default class clear {
 
   main(){
     this.pipes.drawing.innerText = "";
+    this.pipes.post_psh_proc();
   }
 
 }

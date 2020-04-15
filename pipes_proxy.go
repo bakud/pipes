@@ -3,7 +3,6 @@ package main
 import (
     "log"
     "net/http"
-    "fmt"
     "regexp"
     "io/ioutil"
 )
@@ -23,10 +22,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
     }
     for key, vs := range v {
         if key == "u" && re.MatchString(vs[0]) == true {
+          w.Header().Set("Access-Control-Allow-Origin", "http://pipes.ooo")
           resp, _ := http.Get(vs[0])
           defer resp.Body.Close()
           byteArray, _ := ioutil.ReadAll(resp.Body)
-          fmt.Fprintf(w, "%s", string(byteArray)) // htmlをstringで取得
+          w.Write(byteArray)
         }
     }
 }

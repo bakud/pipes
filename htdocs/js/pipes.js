@@ -29,7 +29,9 @@ function Init() {
     psh.set_pipes_obj({
       default_value,
       std_out,
-      drawing
+      drawing,
+      post_psh_proc,
+      clear_q
     });
 
 };
@@ -85,7 +87,7 @@ var init_input_area  =  function(){
     }, {passive: false});
     q.addEventListener("paste", function(event){
       if ( q.selectionStart >= 0 || q.selectionEnd >= 0 ){
-          fns.set_text(event.target.value, q);
+          set_text(event.target.value, q);
           return;
       }
     });
@@ -100,25 +102,32 @@ var init_input_area  =  function(){
 
     document,addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-          pressed_enter(q);
+          pressed_enter();
           return;
         }
     }, {passive: false});
 };
 
-var pressed_enter = function (q){
+var pressed_enter = function (){
 
     psh.psh_proc(q.value);
 
+};
+
+var clear_q = function (){
+    q.value = "";
+};
+
+var post_psh_proc = function (){
     q.value = default_value;
     q.focus();
     var element = document.documentElement;
     var bottom = element.scrollHeight - element.clientHeight;
     window.scroll(0, bottom);
-
 };
 
 var std_out = function(output){
+    clear_q();
     drawing.innerText += output;
 };
 
