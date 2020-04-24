@@ -21,6 +21,7 @@ var title_ascii_art = (function() {/*
 
 function Init() {
 
+    init_behavior();
     init_all();
     init_drawing_area();
     init_title();
@@ -34,6 +35,14 @@ function Init() {
       clear_q
     });
 
+};
+
+var init_behavior = function (){
+    // to invalid back of history.
+    history.pushState(null, null, null);
+    window.addEventListener('popstate', function(e) {
+        history.pushState(null, null, null);
+    });
 };
 
 var init_title = function () {
