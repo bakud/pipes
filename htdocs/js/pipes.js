@@ -30,6 +30,7 @@ function Init() {
     psh.set_pipes_obj({
       default_value,
       std_out,
+      html_out,
       drawing,
       post_psh_proc,
       clear_q
@@ -37,7 +38,7 @@ function Init() {
 
 };
 
-var init_behavior = function (){
+var init_behavior = function () {
     // to invalid back of history.
     history.pushState(null, null, null);
     window.addEventListener('popstate', function(e) {
@@ -60,6 +61,12 @@ var set_theme = function (){
     // set theme to input area
     q.style.backgroundColor = background_color;
     q.style.color = text_color;
+
+    // set a
+    var css = 'a:link{color:' + text_color + '} a:visited{color:' + text_color + '} a:hover{color:' + text_color + '} a { text-decoration: none;}';
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.getElementsByTagName('head')[0].appendChild(style);
 };
 
 var init_all = function (){
@@ -137,7 +144,20 @@ var post_psh_proc = function (){
 
 var std_out = function(output){
     clear_q();
-    drawing.innerText += output;
+    var div = get_div();
+    div.innerText = output;
+    drawing.appendChild(div);
+};
+
+var html_out = function(output){
+    clear_q();
+    var div = get_div();
+    div.innerHTML = output;
+    drawing.appendChild(div);
+};
+
+var get_div = function(){
+    return document.createElement('div');
 };
 
 var set_text = function (text,q) {
