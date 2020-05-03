@@ -6,6 +6,7 @@ var default_value = "anon@pipes$ ";
 var psh = new pipes_shell();
 var q;
 var drawing;
+var margin;
 var all;
 var title;
 var default_font_size = "1.5vh";
@@ -26,6 +27,7 @@ function Init() {
     init_drawing_area();
     init_title();
     init_input_area();
+    init_margin_area();
     set_theme();
     psh.set_pipes_obj({
       default_value,
@@ -38,12 +40,19 @@ function Init() {
 
 };
 
+var init_margin_area = function () {
+    margin = document.createElement('div');
+    all.appendChild(margin);
+    margin.style.height = "20px";
+};
+
 var init_behavior = function () {
     // to invalid back of history.
     history.pushState(null, null, null);
     window.addEventListener('popstate', function(e) {
         history.pushState(null, null, null);
     });
+    document.getElementById('viewport').setAttribute('content', 'user-scalable=no, width=device-width, initial-scale=0.8');
 };
 
 var init_title = function () {
@@ -62,19 +71,21 @@ var set_theme = function (){
     q.style.backgroundColor = background_color;
     q.style.color = text_color;
 
-    // set a
+    // set a css
     var css = 'a:link{color:' + text_color + '} a:visited{color:' + text_color + '} a:hover{color:' + text_color + '} a { text-decoration: none;}';
     var style = document.createElement('style');
     style.appendChild(document.createTextNode(css));
     document.getElementsByTagName('head')[0].appendChild(style);
+
 };
 
 var init_all = function (){
     all = document.createElement('div');
     document.body.appendChild(all);
     all.style.overflowY  = "scroll";
-    all.style.fontFamily = "Courier New, Courier, monospace";
-    all.style.whiteSpace = "pre";
+    all.style.bottom     = "25px";
+    all.style.fontFamily = "Andale Mono, Courier New, Courier, monospace";
+    all.style.whiteSpace = "pre-wrap";
     all.style.fontSize   = default_font_size;
 };
 
@@ -90,7 +101,7 @@ var init_input_area  =  function(){
     q.style.borderWidth  = "0px";
     q.style.bottom       = "5px";
     q.style.width        = "98%";
-    q.style.fontFamily   = "Courier New, Courier, monospace";
+    q.style.fontFamily   = "Andale Mono, Courier New, Courier, monospace";
     q.style.whiteSpace   = "pre";
     q.style.fontSize     = default_font_size;
     q.style.outlineWidth = "0px";
@@ -125,13 +136,15 @@ var init_input_area  =  function(){
 };
 
 var pressed_enter = function (){
-
-    psh.psh_proc(q.value);
-
+    var input_text = q.value;
+    std_out(input_text + "\r\n");
+    clear_q();
+    setTimeout(function () {psh.psh_proc(input_text);},"50");
 };
 
 var clear_q = function (){
     q.value = "";
+    q.focus();
 };
 
 var post_psh_proc = function (){
@@ -157,7 +170,9 @@ var html_out = function(output){
 };
 
 var get_div = function(){
-    return document.createElement('div');
+    var div = document.createElement('div');
+    div.style.lineHeight = 1.5;
+    return div;
 };
 
 var set_text = function (text,q) {

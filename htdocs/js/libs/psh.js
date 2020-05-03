@@ -15,9 +15,9 @@ export default class pipes_shell {
   }
 
   psh_proc(input_text) {
+
     var text = this.get_input_text(input_text);
     var cmds = this.pipe_input(text);
-    this.pipes.html_out(input_text + "<br>");
     for(var i in cmds) {
 
       console.log(cmds[i]);
