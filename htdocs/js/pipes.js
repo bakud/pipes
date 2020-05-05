@@ -62,7 +62,7 @@ var init_title = function () {
 var set_theme = function (){
 
     const background_color = "#191919";
-    const text_color = "#BFFF00";
+    const text_color = "#7fe000";
     // set theme to body.
     document.body.style.backgroundColor = background_color;
     document.body.style.color = text_color;
