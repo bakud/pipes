@@ -123,7 +123,7 @@ var init_input_area  =  function(){
 
     // turn off several input of key
     document.addEventListener('keydown', (event) => {
-        if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart < default_value.length) {
+        if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart <= default_value.length) {
           q.focus();
           setTimeout(post_keydown(event, q), 0);
         }
@@ -196,13 +196,13 @@ var set_text = function (text,q) {
 
 var post_keydown = function (event, q) {
 
-    if(document.getSelection().toString() !== "" && document.activeElement === q && q.selectionStart < default_value.length){
+    if(document.getSelection().toString() !== "" && document.activeElement === q && q.selectionStart <= default_value.length){
       set_text(event.key, q);
       return;
     }
 
     // set arroleft behavior.
-    if (event.key === "ArrowLeft" && q.selectionStart <= default_value.length){
+    if (event.key === "ArrowLeft" && q.selectionStart < default_value.length){
       event.preventDefault();
       return false;
     }
