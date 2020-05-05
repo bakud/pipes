@@ -18,7 +18,7 @@ export default class headline {
       if (typeof item.getElementsByTagName === 'function' && item.getElementsByTagName("title") !== undefined ){
         var title = item.getElementsByTagName("title")[0].textContent;
         var link = item.getElementsByTagName("link")[0].textContent;
-        output_strings += '<a href="' + link + '" target="_blank">' + title + '</a>\r\n';
+        output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
       }
     }
 
@@ -27,7 +27,7 @@ export default class headline {
       if (typeof entry.getElementsByTagName === 'function' && entry.getElementsByTagName("title") !== undefined ){
         var title = entry.getElementsByTagName("title")[0].textContent;
         var link = entry.getElementsByTagName("link")[0].textContent;
-        output_strings += '<a href="' + link + '" target="_blank">' + title + '</a>\r\n';
+        output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
       }
     }
 
