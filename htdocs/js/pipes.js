@@ -202,7 +202,7 @@ var post_keydown = function (event, q) {
     }
 
     // set arroleft behavior.
-    if (event.key === "ArrowLeft" && q.selectionStart < default_value.length){
+    if (event.key === "ArrowLeft" && q.selectionStart <= default_value.length){
       event.preventDefault();
       return false;
     }
