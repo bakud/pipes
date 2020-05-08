@@ -4,9 +4,9 @@ export default class clear {
     this.pipes = pipes;
   }
 
-  main(){
+  main(args, psh){
     this.pipes.drawing.innerText = "";
-    this.pipes.post_psh_proc();
+    psh.exit_psh_done();
   }
 
 }

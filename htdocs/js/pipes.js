@@ -10,7 +10,8 @@ var margin;
 var all;
 var title;
 var default_font_size = "1.5vh";
-var title_ascii_art = (function() {/*
+var ctlkey_pressed    = false;
+var title_ascii_art   = (function() {/*
   ______   __     ______   ______     ______
  /\  == \ /\ \   /\  == \ /\  ___\   /\  ___\
  \ \  _-/ \ \ \  \ \  _-/ \ \  __\   \ \___  \
@@ -35,7 +36,8 @@ function Init() {
       html_out,
       drawing,
       post_psh_proc,
-      clear_q
+      clear_q,
+      focus_to_bottom
     });
 
 };
@@ -115,6 +117,7 @@ var init_input_area  =  function(){
         event.preventDefault();
     }, {passive: false});
     q.addEventListener("paste", function(event){
+      q.focus();
       if ( q.selectionStart >= 0 || q.selectionEnd >= 0 ){
           set_text(event.target.value, q);
           return;
@@ -123,10 +126,17 @@ var init_input_area  =  function(){
 
     // turn off several input of key
     document.addEventListener('keydown', (event) => {
+        if (event.ctrlKey) { ctlkey_pressed = true; }
+        if (ctlkey_pressed && event.key === 'c') { psh.abort_proc(); }
         if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart <= default_value.length) {
           q.focus();
           setTimeout(post_keydown(event, q), 0);
         }
+    }, {passive: false});
+
+    // turn off several input of key
+    document.addEventListener('keyup', (event) => {
+        if (event.ctrlKey) { ctlkey_pressed = false; }
     }, {passive: false});
 
     // turn off click action.
@@ -160,6 +170,10 @@ var clear_q = function (){
 var post_psh_proc = function (){
     q.value = default_value;
     q.focus();
+    focus_to_bottom();
+};
+
+var focus_to_bottom = function (){
     var element = document.documentElement;
     var bottom = element.scrollHeight - element.clientHeight;
     window.scroll(0, bottom);

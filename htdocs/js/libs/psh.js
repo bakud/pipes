@@ -14,40 +14,108 @@ export default class pipes_shell {
     this.pipes = obj;
   }
 
+  exit_return(res){
+    if (this.allow_done && this.proc_done) { this.exit_psh_done(); }
+    return res;
+  }
+
+  continue_return(res){
+    return res;
+  }
+
+  abort_proc (){
+    clearInterval(this.bin_inte);
+    this.exit_all_psh_done();
+    for(var i in this.cmd_log){
+        this[this.cmd_log[i]] = undefined;
+    }
+  }
+
   psh_proc(input_text) {
 
-    var text = this.get_input_text(input_text);
-    var cmds = this.pipe_input(text);
-    for(var i in cmds) {
+    var psh       = this;
+    psh.cmds      = this.pipe_input(this.get_input_text(input_text));
+    psh.proc_done = false;
+    psh.bin_inte  = undefined;
+    psh.cmd_log   = [];
+
+    this.pipes_proc(psh.cmds, psh);
+
+    var inte = setInterval(function() {
+
+      if ( psh.proc_done ) {
+          psh.exit_psh_proc (inte);
+          return;
+      }
+
+    }, 50, psh);
+
+  }
+
+  reload_pipes_proc (){
+    var psh       = this;
+    this.pipes_proc(psh.cmds, psh);
+  }
+
+  pipes_proc(cmds, psh){
+
+    for( var i in cmds ) {
 
       console.log(cmds[i]);
 
-      if ( cmds[i] !== "" && !this.is_bin(this.get_cmd(cmds[i])) ) {
-          this.pipes.std_out("-psh: " + this.get_cmd(cmds[i]) + ": command not found\r\n");
-          this.pipes.post_psh_proc();
+      if ( cmds[i] !== "" && !psh.is_bin(psh.get_cmd(cmds[i])) ) {
+          psh.pipes.std_out("-psh: " + psh.get_cmd(cmds[i]) + ": command not found\r\n");
+          psh.pipes.post_psh_proc();
+          psh.exit_all_psh_done ();
           return;
       } else if ( cmds[i] === "" ) {
-          this.pipes.post_psh_proc();
+          psh.pipes.post_psh_proc();
+          psh.exit_all_psh_done ();
           return;
       }
 
-      this.output = this.execute_cmd(cmds[i], this.output);
-      if (this.output === undefined) {
-          this.pipes.std_out("-psh: " + this.get_cmd(cmds[i]) + ": command not found\r\n");
-          this.pipes.post_psh_proc();
+      if ( parseInt(i) + 1 == cmds.length ) { psh.allow_done = true; } else { psh.allow_done = false; }
+
+      psh.output = psh.execute_cmd(cmds[i], psh);
+
+      if ( psh.output === undefined ) {
+          psh.pipes.std_out("-psh: " + psh.get_cmd(cmds[i]) + ": command not found\r\n");
+          psh.pipes.post_psh_proc();
+          psh.exit_all_psh_done ();
           return;
       }
 
     }
 
-    if(this.output_type === "html"){
-      this.pipes.html_out(this.output);
-    } else {
-      this.pipes.std_out(this.output);
-    }
+  }
 
-    this.pipes.post_psh_proc();
-    this.output = "";
+  exit_psh_done(){
+      this.proc_done = true;
+  }
+
+  exit_all_psh_done(){
+      this.allow_done = true;
+      this.proc_done = true;
+  }
+
+  exit_inte(inte){
+    clearInterval(inte);
+  }
+
+  exit_psh_proc(inte){
+
+      this.output = this.output === undefined ? "" : this.output;
+
+      if(this.output_type === "html"){
+        this.pipes.html_out(this.output);
+      } else {
+        this.pipes.std_out(this.output);
+      }
+
+      this.pipes.post_psh_proc();
+      this.output = "";
+
+      clearInterval(inte);
 
   }
 
@@ -69,11 +137,12 @@ export default class pipes_shell {
 
   get_args(cmd) {
     var cmd_array  = cmd.split(" ");
+    if (cmd_array[0] === "") { cmd_array.shift(); }
     cmd_array.shift();
     return cmd_array;
   }
 
-  execute_cmd(input_text, output) {
+  execute_cmd(input_text, output, psh) {
     // check for could execute
     if (!this.is_bin(this.get_cmd(input_text))){
         return undefined;
@@ -81,10 +150,14 @@ export default class pipes_shell {
     // execute
     var bin;
     var name = this.get_cmd(input_text);
+    if (!this.cmd_log.some(value => value === name)) {
+      this[name] = {};
+      this.cmd_log.push(name);
+    }
     eval("bin = new " + name + "(this.pipes);");
     try {
       this.output_type = bin.output_type !== undefined ? bin.output_type : "";
-      var res = bin.main(this.get_args(input_text), output);
+      var res = bin.main(this.get_args(input_text), output, psh);
       bin = null;
       return res;
     } catch (e){

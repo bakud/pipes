@@ -17,7 +17,8 @@ export default class wcat {
     }
   }
 
-  main(args){
+  main(args, psh){
+    psh.proc_done = true;
     if (args && args.length > 0){
       var res = "";
       for( var i in args ) {
@@ -25,9 +26,9 @@ export default class wcat {
           res += this.send_xhr(args[i]);
           if (i !== args.length) { res += "\r\n"; }
       }
-      return res;
+      return psh.exit_return(res);
     } else {
-      return "wcat needs atleast one argument.";
+      return psh.exit_return("wcat needs atleast one argument.");
     }
   }
 
