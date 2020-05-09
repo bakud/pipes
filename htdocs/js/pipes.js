@@ -128,7 +128,7 @@ var init_input_area  =  function(){
 
     // turn off several input of key
     document.addEventListener('keydown', (event) => {
-        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+        if ((event.key === "ArrowUp" || event.key === "ArrowDown") && q.selectionStart >= default_value.length) {
           event.preventDefault();
           q.setSelectionRange(q.value.length, q.value.length);
           var direct = event.key === "ArrowUp" ? "up" : "down";
@@ -137,7 +137,7 @@ var init_input_area  =  function(){
         }
         if (event.ctrlKey) { ctlkey_pressed = true; }
         if (ctlkey_pressed && event.key === 'c') { psh.abort_proc(); }
-        if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart <= default_value.length) {
+        if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart >= default_value.length) {
           q.focus();
           setTimeout(post_keydown(event, q), 0);
         }
@@ -157,7 +157,7 @@ var init_input_area  =  function(){
     });
 
     document,addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && q.selectionStart >= default_value.length) {
           pressed_enter();
           return;
         }
@@ -259,13 +259,13 @@ var change_history = function (direct){
 
 var post_keydown = function (event, q) {
 
-    if(document.getSelection().toString() !== "" && document.activeElement === q && q.selectionStart <= default_value.length){
+    if(document.getSelection().toString() !== "" && document.activeElement === q && q.selectionStart >= default_value.length){
       set_text(event.key, q);
       return;
     }
 
     // set arroleft behavior.
-    if (event.key === "ArrowLeft" && q.selectionStart <= default_value.length){
+    if (event.key === "ArrowLeft" && q.selectionStart >= default_value.length){
       event.preventDefault();
       return false;
     }
