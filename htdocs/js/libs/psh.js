@@ -16,6 +16,7 @@ export default class pipes_shell {
 
   exit_return(res){
     if (this.allow_done && this.proc_done) { this.exit_psh_done(); }
+    this.bin_proc_done = true;
     return res;
   }
 
@@ -57,11 +58,9 @@ export default class pipes_shell {
     this.pipes_proc(psh.cmds, psh);
   }
 
-  pipes_proc(cmds, psh){
+  pipes_proc(cmds, psh, i=0){
 
-    for( var i in cmds ) {
-
-      console.log(cmds[i]);
+      psh.bin_proc_done = false;
 
       if ( cmds[i] !== "" && !psh.is_bin(psh.get_cmd(cmds[i])) ) {
           psh.pipes.std_out("-psh: " + psh.get_cmd(cmds[i]) + ": command not found\r\n");
@@ -85,7 +84,15 @@ export default class pipes_shell {
           return;
       }
 
-    }
+      var inte = setInterval(function() {
+        if ( psh.bin_proc_done ) {
+            if (cmds.length !== i + 1){
+              i++;
+              psh.pipes_proc(cmds, psh, i);
+            }
+            return;
+        }
+      }, 50, psh);
 
   }
 

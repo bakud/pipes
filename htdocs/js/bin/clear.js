@@ -6,6 +6,7 @@ export default class clear {
 
   main(args, psh){
     this.pipes.drawing.innerText = "";
+    psh.bin_proc_done = true;
     psh.exit_psh_done();
   }
 

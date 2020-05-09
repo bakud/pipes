@@ -224,7 +224,6 @@ var post_keydown = function (event, q) {
     if (event.keyCode == 8 || event.keyCode == 46){
       // check default value length.
       if (q.value.length <= default_value.length){
-        console.log("hit");
         event.preventDefault();
         return false;
       }
