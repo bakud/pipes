@@ -4,7 +4,7 @@
 ## Description
 pipes works as CLI on browser.  
 It reproduces the feel of a terminal-like operation, but doesn't behave as a UNIX.  
-Instead, we'll be adding familiar commands in BINS as in-browser commands.  
+Instead, I plan to add a UNIX-like command in BINS as a command in the browser. 
 Basically, I wanted to bring the power of PIPE in UNIX to the browser.  
   
 `wcat http://rss.cnn.com/rss/cnn_topstories.rss | headline -t`  
