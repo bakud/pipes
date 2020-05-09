@@ -3,8 +3,9 @@
 
 ## Description
 pipes works as CLI on browser.  
-like this...  
+  
 `wcat http://rss.cnn.com/rss/cnn_topstories.rss | headline -t`  
+  
 <img width="1017" alt="スクリーンショット 2020-05-09 20 57 06" src="https://user-images.githubusercontent.com/661905/81473241-110b5280-9238-11ea-874b-68454baaf760.png">
 
 ## Usage
