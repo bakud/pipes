@@ -193,7 +193,9 @@ var get_history = function(){
         return undefined;
       }
 
-      return history[history_count];
+      var output_history = history.reverse()
+
+      return output_history[history_count];
     }
 }
 
