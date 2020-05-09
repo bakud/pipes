@@ -1,16 +1,17 @@
 import pipes_shell from './libs/psh.js';
 
 // start pipes.
-var fns;
+var history_key = "hst";
 var default_value = "anon@pipes$ ";
 var psh = new pipes_shell();
 var q;
 var drawing;
 var margin;
 var all;
-var title;
 var default_font_size = "1.5vh";
 var ctlkey_pressed    = false;
+var history_count     = -1;
+var current_input     = "";
 var title_ascii_art   = (function() {/*
   ______   __     ______   ______     ______
  /\  == \ /\ \   /\  == \ /\  ___\   /\  ___\
@@ -37,7 +38,8 @@ function Init() {
       drawing,
       post_psh_proc,
       clear_q,
-      focus_to_bottom
+      focus_to_bottom,
+      save_history
     });
 
 };
@@ -126,6 +128,13 @@ var init_input_area  =  function(){
 
     // turn off several input of key
     document.addEventListener('keydown', (event) => {
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          event.preventDefault();
+          q.setSelectionRange(q.value.length, q.value.length);
+          var direct = event.key === "ArrowUp" ? "up" : "down";
+          change_history(direct);
+          return;
+        }
         if (event.ctrlKey) { ctlkey_pressed = true; }
         if (ctlkey_pressed && event.key === 'c') { psh.abort_proc(); }
         if (!event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey && q.selectionStart <= default_value.length) {
@@ -155,14 +164,40 @@ var init_input_area  =  function(){
     }, {passive: false});
 };
 
-var pressed_enter = function (){
+var pressed_enter = function () {
     var input_text = q.value;
     std_out(input_text + "\r\n");
     clear_q();
     setTimeout(function () {psh.psh_proc(input_text);},"50");
 };
 
-var clear_q = function (){
+var save_history = function(cmd) {
+    if(cmd === "") return;
+    var history = JSON.parse(localStorage.getItem(history_key));
+    if (history == null) { history = []; }
+    history.push(cmd);
+    localStorage.setItem(history_key, JSON.stringify(history));
+};
+
+var get_history = function(){
+
+    if ( history_count === -1 ){
+      return current_input;
+    } else {
+      var history = JSON.parse(localStorage.getItem(history_key));
+      if ( history == null) {
+        history_count = -1;
+        return undefined;
+      } else if (history[history_count] === undefined ) {
+        history_count =  history_count - 1;
+        return undefined;
+      }
+
+      return history[history_count];
+    }
+}
+
+var clear_q = function () {
     q.value = "";
     q.focus();
 };
@@ -207,6 +242,18 @@ var set_text = function (text,q) {
     q.setSelectionRange(q.value.length, q.value.length);
     q.dispatchEvent( textEvent );
 };
+
+var change_history = function (direct){
+    if (direct === "up"){ history_count++; }
+    else if(direct === "down") {
+      history_count--;
+      if (history_count < -1) {  history_count = -1;}
+    }
+    var history_line = get_history();
+    if (history_line === undefined) { return; }
+    q.value = default_value + history_line;
+    q.setSelectionRange(q.value.length, q.value.length);
+}
 
 var post_keydown = function (event, q) {
 

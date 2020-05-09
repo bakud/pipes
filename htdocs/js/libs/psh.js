@@ -35,10 +35,13 @@ export default class pipes_shell {
   psh_proc(input_text) {
 
     var psh       = this;
-    psh.cmds      = this.pipe_input(this.get_input_text(input_text));
+    var input_cmd = this.get_input_text(input_text);
+    psh.cmds      = this.pipe_input(input_cmd);
     psh.proc_done = false;
     psh.bin_inte  = undefined;
     psh.cmd_log   = [];
+
+    this.pipes.save_history(input_cmd);
 
     this.pipes_proc(psh.cmds, psh);
 

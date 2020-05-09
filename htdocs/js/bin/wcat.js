@@ -55,6 +55,8 @@ export default class wcat {
       return "";
 
     } else {
+      psh.bin_proc_done = true;
+      psh.proc_done = true;
       return psh.exit_return("wcat needs atleast one argument.");
     }
   }
