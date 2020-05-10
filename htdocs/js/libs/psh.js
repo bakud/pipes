@@ -25,6 +25,7 @@ export default class pipes_shell {
   }
 
   abort_proc (){
+    console.log("abort");
     clearInterval(this.bin_inte);
     this.exit_all_psh_done();
     for(var i in this.cmd_log){
@@ -104,8 +105,9 @@ export default class pipes_shell {
   }
 
   exit_all_psh_done(){
-      this.allow_done = true;
-      this.proc_done = true;
+      this.bin_proc_done = true;
+      this.allow_done    = true;
+      this.proc_done     = true;
   }
 
   exit_inte(inte){

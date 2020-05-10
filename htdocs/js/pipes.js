@@ -128,6 +128,7 @@ var init_input_area  =  function(){
 
     // turn off several input of key
     document.addEventListener('keydown', (event) => {
+        console.log("pushed");
         if ((event.key === "ArrowUp" || event.key === "ArrowDown") && q.selectionStart >= default_value.length) {
           event.preventDefault();
           q.setSelectionRange(q.value.length, q.value.length);
