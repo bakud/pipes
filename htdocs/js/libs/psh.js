@@ -47,7 +47,7 @@ export default class pipes_shell {
 
     var inte = setInterval(function() {
 
-      if ( psh.proc_done ) {
+      if ( psh.bin_proc_done && psh.proc_done ) {
           psh.exit_psh_proc (inte);
           return;
       }

@@ -15,14 +15,13 @@ export default class wcat {
           if ( !psh.wcat.writing_output ) {
               psh.wcat.writing_output = true;
               psh.output += xhr.responseText + "\r\n";
-              if (psh.wcat.load_count === psh.wcat.loaded_count + 1){ psh.output += "\r\n"; }
+              //if (psh.wcat.load_count === psh.wcat.loaded_count + 1){ psh.output += "\r\n"; }
               psh.wcat.loaded_count++;
               psh.wcat.writing_output = false;
               clearInterval(inte);
               return;
           }
         }, wait_time, psh);
-
   		}
     }
     xhr.send();
@@ -47,7 +46,7 @@ export default class wcat {
       var inte = setInterval(function() {
         if ( psh.wcat.load_count === psh.wcat.loaded_count ) {
             psh.bin_proc_done = true;
-            psh.proc_done = true;
+            if ( psh.allow_done ) { psh.proc_done = true; }
             clearInterval(inte);
             return;
         }
