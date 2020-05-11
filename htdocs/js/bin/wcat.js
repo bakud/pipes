@@ -9,7 +9,7 @@ export default class wcat {
     var xhr = new XMLHttpRequest();
     xhr.open( 'GET', this.proxy_host + url, true );
     xhr.onreadystatechange = function () {
-  		if (xhr.readyState == 4 && ( xhr.status == 200 || this.xhr.status == 304) ) {
+  		if (xhr.readyState == 4 && ( xhr.status == 200 || xhr.status == 304) ) {
         var wait_time = Math.floor( Math.random() * 1000 ) + 100;
         var inte = setInterval(function() {
           if ( !psh.wcat.writing_output ) {
