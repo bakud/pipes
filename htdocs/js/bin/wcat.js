@@ -9,13 +9,13 @@ export default class wcat {
     var xhr = new XMLHttpRequest();
     xhr.open( 'GET', this.proxy_host + url, true );
     xhr.onreadystatechange = function () {
-  		if (xhr.readyState == 4 && ( xhr.status == 200 || xhr.status == 304) ) {
+  		if (psh.wcat !== undefined && xhr.readyState == 4 && ( xhr.status == 200 || xhr.status == 304) ) {
         var wait_time = Math.floor( Math.random() * 1000 ) + 100;
         var inte = setInterval(function() {
           if ( !psh.wcat.writing_output ) {
               psh.wcat.writing_output = true;
               psh.output += xhr.responseText + "\r\n";
-              //if (psh.wcat.load_count === psh.wcat.loaded_count + 1){ psh.output += "\r\n"; }
+              //if (psh.wcat.load_count !== psh.wcat.loaded_count + 1){ psh.output += "\r\n"; }
               psh.wcat.loaded_count++;
               psh.wcat.writing_output = false;
               clearInterval(inte);
@@ -44,7 +44,12 @@ export default class wcat {
       }
 
       var inte = setInterval(function() {
-        if ( psh.wcat.load_count === psh.wcat.loaded_count ) {
+        if (psh.wcat === undefined){
+            psh.bin_proc_done = true;
+            clearInterval(inte);
+            return;
+        }
+        if ( psh.wcat !== undefined && psh.wcat.load_count === psh.wcat.loaded_count ) {
             psh.bin_proc_done = true;
             if ( psh.allow_done ) { psh.proc_done = true; }
             clearInterval(inte);

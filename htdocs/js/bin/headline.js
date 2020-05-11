@@ -32,6 +32,15 @@ export default class headline {
 
   }
 
+  remove_pattern(result, psh){
+
+      for(var i in result){
+          if (result[i] === null) { continue; }
+          psh.output = psh.output.replace(result[i],'');
+      }
+
+  }
+
   parse_output(psh) {
 
       if (psh.headline.headlines === undefined){
@@ -39,31 +48,40 @@ export default class headline {
       }
 
       var output_strings = this.prefix_output;
-
       var parser = new DOMParser();
-      var dom = parser.parseFromString(psh.output, 'text/xml');
-      for (var i in dom.getElementsByTagName("item")){
-        var item = dom.getElementsByTagName("item")[i];
-        if (typeof item.getElementsByTagName === 'function' && item.getElementsByTagName("title") !== undefined ){
-          var title = item.getElementsByTagName("title")[0].textContent;
-          var link = item.getElementsByTagName("link")[0].textContent;
-          if (!psh.headline.headlines.some((v) => v === title)){
-              output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
-              psh.headline.headlines.push(title);
-          }
-        }
-      }
+      // detect type of document.
+      var dom_arr = psh.output.split('<?xml version=');
 
-      for (var i in dom.getElementsByTagName("entry")){
-        var entry = dom.getElementsByTagName("entry")[i];
-        if (typeof entry.getElementsByTagName === 'function' && entry.getElementsByTagName("title") !== undefined ){
-          var title = entry.getElementsByTagName("title")[0].textContent;
-          var link = entry.getElementsByTagName("link")[0].textContent;
-          if (!psh.headline.headlines.some((v) => v === title)){
-              output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
-              psh.headline.headlines.push(title);
+      for (var di in dom_arr) {
+
+          if (dom_arr[di] === null || dom_arr[di] === "") { continue; }
+
+          var seed_dom = "<?xml version=" + dom_arr[di];
+          var dom = parser.parseFromString(seed_dom, 'text/xml');
+
+          for (var i in dom.getElementsByTagName("item")){
+            var item = dom.getElementsByTagName("item")[i];
+            if (typeof item.getElementsByTagName === 'function' && item.getElementsByTagName("title") !== undefined ){
+              var title = item.getElementsByTagName("title")[0].textContent;
+              var link = item.getElementsByTagName("link")[0].textContent;
+              if (!psh.headline.headlines.some((v) => v === title)){
+                  output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
+                  psh.headline.headlines.push(title);
+              }
+            }
           }
-        }
+
+          for (var i in dom.getElementsByTagName("entry")){
+            var entry = dom.getElementsByTagName("entry")[i];
+            if (typeof entry.getElementsByTagName === 'function' && entry.getElementsByTagName("title") !== undefined ){
+              var title = entry.getElementsByTagName("title")[0].textContent;
+              var link = entry.getElementsByTagName("link")[0].textContent;
+              if (!psh.headline.headlines.some((v) => v === title)){
+                  output_strings += '･ <a href="' + link + '" target="_blank">' + title + '</a>\r\n';
+                  psh.headline.headlines.push(title);
+              }
+            }
+          }
       }
 
       return output_strings + this.suffix_output;
